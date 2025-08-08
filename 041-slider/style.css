@@ -25,5 +25,51 @@ strong {
 	font-size: 3em;
 	font-weight: bold;
 	color: white;
-  text-shadow: 0px 3px 3px rgba(0, 0, 0, 0.5);
+	text-shadow: 0px 3px 3px rgba(0, 0, 0, 0.5);
+	position: relative;
+}
+
+#btnPrev,
+#btnNext {
+	z-index: 999;
+	position: absolute;
+	background-color: rgba(0, 0, 0, 0.4);
+	color: white;
+	font-size: 0.5em;
+	height: 50%;
+	width: max-content;
+	border-radius: 4px;
+	transition: all 0.15s ease;
+
+	&:hover {
+		cursor: pointer;
+	}
+
+	&:active {
+		transform: scale(0.98);
+	}
+}
+
+#btnPrev {
+	left: 10px;
+}
+
+#btnNext {
+	right: 10px;
+}
+
+#load {
+	width: 90%;
+	height: 5px;
+	border: 1px solid rgba(0, 0, 0, 0.5);
+	position: absolute;
+	bottom: 15px;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+#bar {
+	width: 0%;
+	height: 100%;
+	background-color: rgba(255, 255, 255, 0.8);
 }

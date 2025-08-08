@@ -1,10 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const imageList = [];
 	const slider = document.querySelector("#slider");
-	let intervalId,
-		currentImage,
-		quantityImages,
-		cont = 1;
+	const bar = document.querySelector("#bar");
+	let animationId, currentImage, quantityImages, timeSlider;
 
 	function preLoad() {
 		quantityImages = 4;
@@ -17,26 +15,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	function loadImage(imgId) {
 		slider.style.backgroundImage = `url(${imageList[imgId].src})`;
-		slider.textContent = cont;
-		cont++;
-
-		if (cont > quantityImages) cont = 1;
 	}
 
-	function changeImage() {
-		currentImage++;
+	function changeImage(direction) {
+		timeSlider = 0;
+		currentImage += direction;
 		if (currentImage > quantityImages - 1) currentImage = 0;
+		if (currentImage < 0) currentImage = quantityImages - 1;
+
 		loadImage(currentImage);
 	}
 
 	function start() {
 		currentImage = 0;
-		let timeSlider = 2000;
+		timeSlider = 0;
 		preLoad();
 		loadImage(currentImage);
+		anima();
+	}
 
-		intervalId = setInterval(changeImage, timeSlider);
+	function anima() {
+		timeSlider++;
+
+		if (timeSlider >= 500) {
+			timeSlider = 0;
+			changeImage(1);
+		}
+
+		bar.style.width = `${timeSlider / 5}%`;
+
+		animationId = requestAnimationFrame(anima);
 	}
 
 	start();
+
+	const btnPrev = document.querySelector("#btnPrev");
+	btnPrev.addEventListener("click", () => {
+		changeImage(-1);
+	});
+
+	const btnNext = document.querySelector("#btnNext");
+	btnNext.addEventListener("click", () => {
+		changeImage(1);
+	});
 });
