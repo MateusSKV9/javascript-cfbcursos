@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		animationId: null,
 		totalImages: 4,
 		currentImage: 0,
-		imageInterval: 5000,
+		imageInterval: 3000,
 		timeSlider: 0,
 		lastTimestamp: 0,
 
@@ -37,12 +37,16 @@ document.addEventListener("DOMContentLoaded", () => {
 			this.timeSlider += elapsed;
 
 			if (this.timeSlider >= this.imageInterval) {
-				this.timeSlider = 0;
-				this.changeImage(1);
-			}
+				this.bar.style.width = `100%`;
 
-			const barWidth = (this.timeSlider / this.imageInterval) * 100;
-			this.bar.style.width = `${barWidth}%`;
+				setTimeout(() => {
+					this.timeSlider = 0;
+					this.changeImage(1);
+				}, 10);
+			} else {
+				const barWidth = (this.timeSlider / this.imageInterval) * 100;
+				this.bar.style.width = `${barWidth}%`;
+			}
 
 			this.lastTimestamp = timestamp;
 			this.animationId = requestAnimationFrame(this.updateBar.bind(this));
