@@ -139,3 +139,25 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (event.key == "Enter") wordHasLetter(inputLetter.value);
 	});
 
+	async function searchWord() {
+		const loading = document.querySelector("#loading-container");
+		loading.classList.remove("hidden");
+
+		try {
+			const response = await fetch("https://json-server-5bev.onrender.com/jogo-da-forca");
+			const data = await response.json();
+
+			const randomIndex = Math.floor(Math.random() * data.length);
+			const selectedWord = data[randomIndex].palavra;
+			const tip = data[randomIndex].pista;
+
+			generateNewWord(selectedWord, tip);
+		} catch (error) {
+			alert("Erro ao carregar palavra: " + error);
+		} finally {
+			loading.classList.add("hidden");
+		}
+	}
+
+	searchWord();
+});
