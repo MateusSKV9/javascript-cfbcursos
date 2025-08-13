@@ -72,7 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (errors >= 5) leftLeg.classList.remove("hidden");
 		if (errors == 6) {
 			rightLeg.classList.remove("hidden");
-			alert("Perdeu!");
 			title.classList.add("lose");
 			finish();
 		}
