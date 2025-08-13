@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const head = document.querySelector("#head");
 	const body = document.querySelector("#body");
+	const leftEye = document.querySelector(".eye.left");
+	const rightEye = document.querySelector(".eye.right");
 	const leftArm = document.querySelector(".arm.left");
 	const rightArm = document.querySelector(".arm.right");
 	const leftLeg = document.querySelector(".leg.left");
@@ -18,19 +20,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	function generateNewWord(word, tip) {
 		reset();
-
 		sortedWord = word;
-
 		tipContent.textContent = tip;
-
-		let i = 1;
 		containerLetters.innerHTML = "";
-		while (i <= word.length) {
-			containerLetters.innerHTML += `
-        <input class="inputLetter" type="text" readonly name="letter${i}" id="letter${i}" title="letter" />  
-        `;
-			i++;
+		const fragment = document.createDocumentFragment();
+
+		for (let i = 0; i < word.length; i++) {
+			const input = document.createElement("input");
+			input.className = "inputLetter";
+			input.type = "text";
+			input.readOnly = true;
+			input.name = `letter${i + 1}`;
+			input.title = "letter";
+			fragment.appendChild(input);
 		}
+
+		containerLetters.appendChild(fragment);
 	}
 
 	function wordHasLetter(letter) {
@@ -41,9 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		if (!validateLetter(letter)) return;
 
+		inputLetter.value = "";
+
 		if (sentLetters.includes(letter)) return;
 		sentLetters.push(letter);
 		pSentLetters.textContent += ` - ${letter}`;
+
+		const hangmanParts = [head, body, leftArm, rightArm, leftLeg, rightLeg];
 
 		if (hasLetter >= 0) {
 			lettersOfWord.forEach((letterWord, index) => {
@@ -53,8 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
 				}
 			});
 
-			inputLetter.value = "";
-
 			if (filledLetters == lettersOfWord.length) {
 				fireConfetti();
 				title.classList.add("win");
@@ -62,18 +69,19 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 
 			return;
-		}
+		} else {
+			errors++;
 
-		errors++;
-		if (errors >= 1) head.classList.remove("hidden");
-		if (errors >= 2) body.classList.remove("hidden");
-		if (errors >= 3) leftArm.classList.remove("hidden");
-		if (errors >= 4) rightArm.classList.remove("hidden");
-		if (errors >= 5) leftLeg.classList.remove("hidden");
-		if (errors == 6) {
-			rightLeg.classList.remove("hidden");
-			title.classList.add("lose");
-			finish();
+			if (errors <= hangmanParts.length) {
+				hangmanParts[errors - 1].classList.remove("hidden");
+			}
+
+			if (errors == 6) {
+				title.classList.add("lose");
+				leftEye.classList.remove("hidden");
+				rightEye.classList.remove("hidden");
+				finish();
+			}
 		}
 	}
 
@@ -84,28 +92,30 @@ document.addEventListener("DOMContentLoaded", () => {
 		rightArm.classList.add("hidden");
 		leftLeg.classList.add("hidden");
 		rightLeg.classList.add("hidden");
+		leftEye.classList.add("hidden");
+		rightEye.classList.add("hidden");
 	}
 
 	function reset() {
-		errors = 0;
 		resetPerson();
+		errors = 0;
+		filledLetters = 0;
+		sentLetters = [];
+		title.className = "";
 		inputLetter.value = "";
+		inputLetter.style.borderColor = "black";
+		inputLetter.style.cursor = "text";
 		pSentLetters.textContent = "Letras já testadas: ";
+		btnPlay.removeAttribute("disabled");
 		tipContent.classList.add("hidden");
 		inputLetter.removeAttribute("readonly");
-		btnPlay.removeAttribute("disabled");
-		inputLetter.style.cursor = "text";
-		inputLetter.style.borderColor = "black";
 		inputLetter.removeAttribute("placeholder");
-		title.className = "";
 	}
 
 	function finish() {
 		inputLetter.setAttribute("readonly", "readonly");
 		inputLetter.style.cursor = "not-allowed";
 		btnPlay.setAttribute("disabled", "disabled");
-		filledLetters = 0;
-		sentLetters = [];
 	}
 
 	function validateLetter(letter) {
@@ -179,8 +189,14 @@ document.addEventListener("DOMContentLoaded", () => {
 	async function searchWord() {
 		const loading = document.querySelector("#loading-container");
 		loading.classList.remove("hidden");
+		let longLoadTimer;
 
 		try {
+			longLoadTimer = setTimeout(() => {
+				const loadingMessage = document.querySelector("#loading-long-timer");
+				loadingMessage.textContent += "Servidor quase pronto...🚀";
+			}, 5000);
+
 			const response = await fetch("https://json-server-5bev.onrender.com/jogo-da-forca");
 			const data = await response.json();
 
@@ -192,6 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		} catch (error) {
 			alert("Erro ao carregar palavra: " + error);
 		} finally {
+			clearTimeout(longLoadTimer);
 			loading.classList.add("hidden");
 		}
 	}

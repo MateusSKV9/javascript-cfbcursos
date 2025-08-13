@@ -50,27 +50,27 @@ h1 {
 
 #title.lose {
 	color: #ff003c;
-  text-shadow: 0px 1px 1px rgba(83, 1, 1, 0.501);
+	text-shadow: 0px 1px 1px rgba(83, 1, 1, 0.501);
 
-  &::before {
-    content: "☠️";
-  }
-  &::after {
-    content: "☠️";
-  }
+	&::before {
+		content: "☠️";
+	}
+	&::after {
+		content: "☠️";
+	}
 }
 
 #title.win {
 	color: #00a4ea;
 
-  &::before {
-    display: inline-block;
-    content: "🎉";
-    transform: scaleX(-1);
-  }
-  &::after {
-    content: "🎉";
-  }
+	&::before {
+		display: inline-block;
+		content: "🎉";
+		transform: scaleX(-1);
+	}
+	&::after {
+		content: "🎉";
+	}
 }
 
 .inputLetter {
@@ -116,7 +116,7 @@ h1 {
 	top: 50%;
 	transform: translate(-50%, -50%);
 	z-index: 98;
-	width: 200px;
+	width: 250px;
 	height: 200px;
 	background-color: rgb(255, 255, 255);
 	font-size: 0.9em;
@@ -131,11 +131,17 @@ h1 {
 	width: 120px;
 	height: 120px;
 	border-radius: 50%;
-	border: 7px solid rgb(0, 140, 255);
+	border: 7px solid #008cff;
 	border-color: transparent rgb(0, 140, 255) rgb(0, 140, 255);
 	z-index: 99;
 	animation: rotate 0.5s infinite ease-in-out;
 	position: absolute;
+}
+
+#loading-long-timer {
+	position: absolute;
+	bottom: 5px;
+	font-style: italic;
 }
 
 @keyframes rotate {
